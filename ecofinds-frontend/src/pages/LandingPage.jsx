@@ -38,6 +38,7 @@ export default function LandingPage() {
         "Beauty",
     ];
 
+    // Fetch logged-in user info
     useEffect(() => {
         const fetchUser = async () => {
             try {
