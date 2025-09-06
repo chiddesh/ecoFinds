@@ -17,7 +17,6 @@ export default function CartPage() {
     const [user, setUser] = useState(null);
     const [menuOpen, setMenuOpen] = useState(false);
 
-    // Load cart from localStorage
     useEffect(() => {
         const storedCart = JSON.parse(localStorage.getItem("cart") || "[]");
         const formattedCart = storedCart.map(item => ({
@@ -28,7 +27,6 @@ export default function CartPage() {
         setCart(formattedCart);
     }, []);
 
-    // Fetch logged-in user info
     useEffect(() => {
         const fetchUser = async () => {
             try {
@@ -100,7 +98,6 @@ export default function CartPage() {
 
     return (
         <div className="min-h-screen bg-neutral-900 text-white flex flex-col">
-            {/* Side Menu Overlay */}
             {menuOpen && (
                 <div
                     className="fixed inset-0 bg-black/40 z-40"
@@ -108,7 +105,6 @@ export default function CartPage() {
                 />
             )}
 
-            {/* Side Drawer */}
             <div
                 className={`fixed top-0 left-0 h-full w-64 bg-neutral-800 z-50 transform transition-transform duration-300 ${menuOpen ? "translate-x-0" : "-translate-x-full"}`}
             >
@@ -132,7 +128,6 @@ export default function CartPage() {
                 </div>
             </div>
 
-            {/* Header */}
             <header className="relative bg-neutral-800/90 px-4 py-3 shadow-md">
                 <div className="flex items-center justify-between">
                     <button onClick={() => setMenuOpen((s) => !s)} className="p-1">
@@ -159,7 +154,6 @@ export default function CartPage() {
                 </div>
             </header>
 
-            {/* Page Content */}
             <div className="flex-1 p-6 flex flex-col">
                 <h1 className="text-3xl font-bold mb-6 text-center">Your Cart</h1>
 
@@ -194,7 +188,6 @@ export default function CartPage() {
                     </div>
                 ) : (
                     <>
-                        {/* Cart Items */}
                         <div className="flex-1 flex flex-col gap-4 mb-6">
                             {cart.length === 0 ? (
                                 <div className="text-center text-white/70 mt-10 text-lg">Your cart is empty.</div>
@@ -215,8 +208,6 @@ export default function CartPage() {
                                 ))
                             )}
                         </div>
-
-                        {/* Total & Checkout */}
                         {cart.length > 0 && (
                             <div className="mt-auto flex flex-col gap-3">
                                 <div className="text-right text-lg font-bold text-green-400 mb-2">Total: ₹{totalPrice}</div>
@@ -227,7 +218,6 @@ export default function CartPage() {
                             </div>
                         )}
 
-                        {/* Checkout Modal */}
                         {showCheckout && (
                             <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center">
                                 <div className="bg-neutral-800 rounded-2xl p-6 w-80 shadow-lg">

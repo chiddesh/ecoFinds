@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import logo from "../assets/logo.jpg"; // import your logo
+import logo from "../assets/logo.jpg";
 
 export default function LoginPage() {
     const [form, setForm] = useState({ email: "", password: "" });
@@ -14,7 +14,6 @@ export default function LoginPage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Email validation using regex
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(form.email)) {
             setError("Please enter a valid email address.");
@@ -35,7 +34,7 @@ export default function LoginPage() {
                 return;
             }
 
-            navigate("/"); // redirect on success
+            navigate("/")
         } catch (err) {
             setError("Network error. Please try again.");
         }
@@ -44,7 +43,6 @@ export default function LoginPage() {
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
             <div className="w-full max-w-md bg-white p-8 rounded-xl shadow">
-                {/* Logo */}
                 <div className="flex justify-center mb-4">
                     <img src={logo} alt="Logo" className="h-16 w-auto" />
                 </div>

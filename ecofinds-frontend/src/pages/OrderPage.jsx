@@ -37,7 +37,6 @@ export default function OrderPage() {
 
     return (
         <div className="min-h-screen bg-neutral-900 text-white p-4 sm:p-6 flex flex-col gap-4 sm:gap-6 relative overflow-y-auto">
-            {/* Header */}
             <header className="relative bg-neutral-800/90 px-4 py-3 shadow-md mb-4">
                 <div className="flex items-center justify-between">
                     <button onClick={() => navigate("/")} className="p-1">

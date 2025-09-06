@@ -50,41 +50,70 @@ export default function MyListings() {
 
     return (
         <div className="relative min-h-screen bg-neutral-900 text-white">
-            {/* Header */}
-            <header className="relative bg-neutral-800/90 px-4 py-3 shadow-md">
-                <div className="flex items-center justify-between">
-                    <button onClick={() => navigate("/")} className="p-1">
-                        <img src={logo} alt="logo" className="h-10" />
+            <header className="relative bg-neutral-800/90 px-4 py-3 shadow-md flex items-center justify-between">
+                <button onClick={() => navigate("/")} className="p-1">
+                    <img src={logo} alt="logo" className="h-10" />
+                </button>
+                <div className="flex items-center gap-3">
+                    <button onClick={() => navigate("/cart")} className="relative">
+                        <img src={cartIcon} alt="cart" className="h-7 w-7 filter invert" />
                     </button>
-                    <div className="flex items-center gap-3">
-                        <button onClick={() => navigate("/cart")} className="relative">
-                            <img src={cartIcon} alt="cart" className="h-7 w-7 filter invert" />
+                    <button onClick={() => navigate("/profile")}>
+                        <img
+                            src={user?.pfp_url ? `http://localhost:5174${user.pfp_url}` : profileIcon}
+                            alt="profile"
+                            className="h-8 w-8 rounded-full border-2 border-white/20 object-cover"
+                        />
+                    </button>
+                </div>
+            </header>
+            <div className="p-6 pt-16">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3">
+                    <h1 className="text-3xl font-bold">My Listings</h1>
+                    <div className="flex flex-wrap gap-2 items-center">
+                        <select
+                            value={selectedCategory}
+                            onChange={(e) => setSelectedCategory(e.target.value)}
+                            className="hidden sm:block rounded-md px-3 py-2 bg-neutral-700 text-white"
+                        >
+                            {categories.map((c) => (
+                                <option key={c} value={c} className="bg-neutral-700 text-white">
+                                    {c}
+                                </option>
+                            ))}
+                        </select>
+
+                        <select
+                            value={sortOrder}
+                            onChange={(e) => setSortOrder(e.target.value)}
+                            className="hidden sm:block rounded-md px-3 py-2 bg-neutral-700 text-white"
+                        >
+                            <option value="asc">Price: Low to High</option>
+                            <option value="desc">Price: High to Low</option>
+                        </select>
+
+                        <button
+                            onClick={() => navigate("/add")}
+                            className="bg-green-500 hover:bg-green-600 text-neutral-900 font-semibold px-5 py-2 rounded-xl shadow-md transition transform hover:-translate-y-0.5"
+                        >
+                            + Add Product
                         </button>
-                        <button onClick={() => navigate("/profile")}>
-                            <img
-                                src={user?.pfp_url ? `http://localhost:5174${user.pfp_url}` : profileIcon}
-                                alt="profile"
-                                className="h-8 w-8 rounded-full border-2 border-white/20 object-cover"
-                            />
+
+                        <button
+                            onClick={() => setFilterModalOpen(true)}
+                            className="sm:hidden bg-white text-neutral-900 rounded-md px-4 py-2 font-medium shadow-sm"
+                        >
+                            Filter
+                        </button>
+                        <button
+                            onClick={() => setSortModalOpen(true)}
+                            className="sm:hidden bg-white text-neutral-900 rounded-md px-4 py-2 font-medium shadow-sm"
+                        >
+                            Sort
                         </button>
                     </div>
                 </div>
-            </header>
 
-            {/* Page content */}
-            <div className="p-6 pt-16">
-                {/* Header + Add button */}
-                <div className="flex justify-between items-center mb-6">
-                    <h1 className="text-3xl font-bold">My Listings</h1>
-                    <button
-                        onClick={() => navigate("/add")}
-                        className="bg-green-500 hover:bg-green-600 text-neutral-900 font-semibold px-5 py-2 rounded-xl shadow-md transition transform hover:-translate-y-0.5"
-                    >
-                        + Add Product
-                    </button>
-                </div>
-
-                {/* Product Listings */}
                 {filteredProducts.length === 0 ? (
                     <p className="text-white/70 text-center mt-10 text-lg">You have no listings.</p>
                 ) : (
@@ -101,6 +130,74 @@ export default function MyListings() {
                     </div>
                 )}
             </div>
+
+            {filterModalOpen && (
+                <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center">
+                    <div className="bg-neutral-800 rounded-lg p-4 w-80">
+                        <h3 className="text-lg font-bold mb-3 text-white">Filter by Category</h3>
+                        {categories.map((cat) => (
+                            <button
+                                key={cat}
+                                className={`block w-full text-left mb-2 p-2 rounded ${selectedCategory === cat
+                                    ? "bg-green-500 text-neutral-900"
+                                    : "bg-neutral-700 text-white"
+                                    }`}
+                                onClick={() => {
+                                    setSelectedCategory(cat);
+                                    setFilterModalOpen(false);
+                                }}
+                            >
+                                {cat}
+                            </button>
+                        ))}
+                        <button
+                            className="mt-2 w-full bg-red-500 rounded p-2 text-white"
+                            onClick={() => setFilterModalOpen(false)}
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            )}
+
+
+            {sortModalOpen && (
+                <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center">
+                    <div className="bg-neutral-800 rounded-lg p-4 w-80">
+                        <h3 className="text-lg font-bold mb-3 text-white">Sort Listings</h3>
+                        <button
+                            className={`block w-full text-left mb-2 p-2 rounded ${sortOrder === "asc"
+                                ? "bg-green-500 text-neutral-900"
+                                : "bg-neutral-700 text-white"
+                                }`}
+                            onClick={() => {
+                                setSortOrder("asc");
+                                setSortModalOpen(false);
+                            }}
+                        >
+                            Price: Low to High
+                        </button>
+                        <button
+                            className={`block w-full text-left mb-2 p-2 rounded ${sortOrder === "desc"
+                                ? "bg-green-500 text-neutral-900"
+                                : "bg-neutral-700 text-white"
+                                }`}
+                            onClick={() => {
+                                setSortOrder("desc");
+                                setSortModalOpen(false);
+                            }}
+                        >
+                            Price: High to Low
+                        </button>
+                        <button
+                            className="mt-2 w-full bg-red-500 rounded p-2 text-white"
+                            onClick={() => setSortModalOpen(false)}
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

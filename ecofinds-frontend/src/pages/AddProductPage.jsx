@@ -11,7 +11,21 @@ function AddProductPage() {
         title: "",
         description: "",
         price_cents: "",
-        category: ""
+        category: "",
+        quantity: "",
+        condition: "",
+        year_of_manufacture: "",
+        brand: "",
+        model: "",
+        length: "",
+        width: "",
+        height: "",
+        weight: "",
+        material: "",
+        color: "",
+        original_packaging: false,
+        manual_included: false,
+        working_condition: ""
     });
     const [user, setUser] = useState(null);
     const categories = ["Electronics", "Clothing", "Books", "Home", "Toys", "Sports", "Beauty"];
@@ -19,7 +33,6 @@ function AddProductPage() {
     const [preview, setPreview] = useState(null);
     const [loadingUser, setLoadingUser] = useState(true);
 
-    // Fetch user info
     useEffect(() => {
         const fetchUser = async () => {
             try {
@@ -41,7 +54,11 @@ function AddProductPage() {
 
     if (loadingUser) return <div className="text-white p-6 text-center">Loading user info...</div>;
 
-    const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+    const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setForm({ ...form, [name]: type === "checkbox" ? checked : value });
+    };
+
     const handleFileChange = (e) => {
         const selectedFile = e.target.files[0];
         if (selectedFile) {
@@ -53,11 +70,11 @@ function AddProductPage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData();
-        formData.append("seller_id", form.seller_id);
-        formData.append("title", form.title);
-        formData.append("description", form.description);
-        formData.append("price_cents", form.price_cents);
-        formData.append("category", form.category);
+
+        Object.entries(form).forEach(([key, value]) => {
+            formData.append(key, value);
+        });
+
         if (file) formData.append("image", file);
 
         try {
@@ -79,7 +96,6 @@ function AddProductPage() {
 
     return (
         <div className="min-h-screen bg-neutral-900 text-white flex flex-col">
-            {/* Header */}
             <header className="relative bg-neutral-800/90 px-4 py-3 shadow-md">
                 <div className="flex items-center justify-between">
                     <button onClick={() => navigate("/")} className="p-1">
@@ -102,48 +118,59 @@ function AddProductPage() {
                 </div>
             </header>
 
-            {/* Main content */}
+
             <div className="flex-1 flex flex-col items-center justify-start p-4 sm:p-6 overflow-y-auto">
                 <h1 className="text-2xl sm:text-3xl font-bold text-white mb-4 sm:mb-6 text-center">
                     Add a New Product
                 </h1>
 
                 <form onSubmit={handleSubmit} className="w-full max-w-md bg-neutral-800 p-4 sm:p-6 rounded-2xl shadow-lg space-y-4 sm:space-y-6">
-                    <div>
-                        <label className="block font-semibold mb-2 text-white/80 text-sm sm:text-base">Product Image</label>
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleFileChange}
-                            className="block w-full text-sm text-white/70 file:mr-4 file:py-2 file:px-3 sm:file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-500 file:text-white hover:file:bg-green-600 cursor-pointer"
-                        />
-                        {preview && <img src={preview} alt="preview" className="mt-2 sm:mt-3 w-full h-40 sm:h-44 object-cover rounded-lg border border-white/30 shadow-sm" />}
-                    </div>
 
                     <div>
-                        <label className="block font-semibold mb-1 sm:mb-2 text-white/80 text-sm sm:text-base">Title</label>
-                        <input type="text" name="title" value={form.title} onChange={handleChange} className="w-full rounded-md px-3 sm:px-4 py-2 text-white bg-neutral-900 border border-white/30 focus:outline-none focus:ring-2 focus:ring-green-500 text-sm sm:text-base" required />
+                        <label className="block font-semibold mb-2 text-white/80">Product Image</label>
+                        <input type="file" accept="image/*" onChange={handleFileChange} className="block w-full text-sm text-white/70 file:mr-4 file:py-2 file:px-3 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-500 file:text-white hover:file:bg-green-600 cursor-pointer" />
+                        {preview && <img src={preview} alt="preview" className="mt-2 w-full h-40 object-cover rounded-lg border border-white/30" />}
                     </div>
 
-                    <div>
-                        <label className="block font-semibold mb-1 sm:mb-2 text-white/80 text-sm sm:text-base">Description</label>
-                        <textarea name="description" value={form.description} onChange={handleChange} rows="3" className="w-full rounded-md px-3 sm:px-4 py-2 text-white bg-neutral-900 border border-white/30 focus:outline-none focus:ring-2 focus:ring-green-500 text-sm sm:text-base" required />
+
+                    <input type="text" name="title" value={form.title} onChange={handleChange} placeholder="Product Title" required className="w-full rounded-md px-3 py-2 text-white bg-neutral-900 border border-white/30" />
+
+
+                    <textarea name="description" value={form.description} onChange={handleChange} placeholder="Product Description" rows="3" required className="w-full rounded-md px-3 py-2 text-white bg-neutral-900 border border-white/30" />
+                    <select name="category" value={form.category} onChange={handleChange} required className="w-full rounded-md px-3 py-2 text-white bg-neutral-900 border border-white/30">
+                        <option value="" disabled>Select a category</option>
+                        {categories.map((cat) => <option key={cat} value={cat}>{cat}</option>)}
+                    </select>
+                    <input type="number" name="price_cents" value={form.price_cents} onChange={handleChange} placeholder="Price (₹)" min="0" required className="w-full rounded-md px-3 py-2 text-white bg-neutral-900 border border-white/30" />
+                    <input type="number" name="quantity" value={form.quantity} onChange={handleChange} placeholder="Quantity" min="1" required className="w-full rounded-md px-3 py-2 text-white bg-neutral-900 border border-white/30" />
+
+                    <input type="text" name="condition" value={form.condition} onChange={handleChange} placeholder="Condition" className="w-full rounded-md px-3 py-2 text-white bg-neutral-900 border border-white/30" />
+                    <input type="number" name="year_of_manufacture" value={form.year_of_manufacture} onChange={handleChange} placeholder="Year of Manufacture" className="w-full rounded-md px-3 py-2 text-white bg-neutral-900 border border-white/30" />
+                    <input type="text" name="brand" value={form.brand} onChange={handleChange} placeholder="Brand" className="w-full rounded-md px-3 py-2 text-white bg-neutral-900 border border-white/30" />
+                    <input type="text" name="model" value={form.model} onChange={handleChange} placeholder="Model" className="w-full rounded-md px-3 py-2 text-white bg-neutral-900 border border-white/30" />
+
+                    <div className="flex gap-2">
+                        <input type="number" name="length" value={form.length} onChange={handleChange} placeholder="Length" className="w-full rounded-md px-3 py-2 text-white bg-neutral-900 border border-white/30" />
+                        <input type="number" name="width" value={form.width} onChange={handleChange} placeholder="Width" className="w-full rounded-md px-3 py-2 text-white bg-neutral-900 border border-white/30" />
+                        <input type="number" name="height" value={form.height} onChange={handleChange} placeholder="Height" className="w-full rounded-md px-3 py-2 text-white bg-neutral-900 border border-white/30" />
                     </div>
 
-                    <div>
-                        <label className="block font-semibold mb-1 sm:mb-2 text-white/80 text-sm sm:text-base">Category</label>
-                        <select name="category" value={form.category} onChange={handleChange} className="w-full rounded-md px-3 sm:px-4 py-2 text-white bg-neutral-900 border border-white/30 focus:outline-none focus:ring-2 focus:ring-green-500 text-sm sm:text-base" required>
-                            <option value="" disabled>Select a category</option>
-                            {categories.map((cat) => <option key={cat} value={cat}>{cat}</option>)}
-                        </select>
-                    </div>
+                    <input type="number" name="weight" value={form.weight} onChange={handleChange} placeholder="Weight (kg)" className="w-full rounded-md px-3 py-2 text-white bg-neutral-900 border border-white/30" />
+                    <input type="text" name="material" value={form.material} onChange={handleChange} placeholder="Material" className="w-full rounded-md px-3 py-2 text-white bg-neutral-900 border border-white/30" />
+                    <input type="text" name="color" value={form.color} onChange={handleChange} placeholder="Color" className="w-full rounded-md px-3 py-2 text-white bg-neutral-900 border border-white/30" />
 
-                    <div>
-                        <label className="block font-semibold mb-1 sm:mb-2 text-white/80 text-sm sm:text-base">Price (₹)</label>
-                        <input type="number" name="price_cents" value={form.price_cents} onChange={handleChange} min="0" className="w-full rounded-md px-3 sm:px-4 py-2 text-white bg-neutral-900 border border-white/30 focus:outline-none focus:ring-2 focus:ring-green-500 text-sm sm:text-base" required />
-                    </div>
+                    <label className="flex items-center gap-2">
+                        <input type="checkbox" name="original_packaging" checked={form.original_packaging} onChange={handleChange} />
+                        Original Packaging
+                    </label>
+                    <label className="flex items-center gap-2">
+                        <input type="checkbox" name="manual_included" checked={form.manual_included} onChange={handleChange} />
+                        Manual/Instructions Included
+                    </label>
 
-                    <button type="submit" className="w-full bg-green-500 hover:bg-green-600 text-neutral-900 font-bold py-2 sm:py-3 rounded-xl shadow-lg transition-all duration-200 text-sm sm:text-base">
+                    <textarea name="working_condition" value={form.working_condition} onChange={handleChange} placeholder="Working Condition Description" rows="2" className="w-full rounded-md px-3 py-2 text-white bg-neutral-900 border border-white/30" />
+
+                    <button type="submit" className="w-full bg-green-500 hover:bg-green-600 text-neutral-900 font-bold py-2 rounded-xl">
                         Add Product
                     </button>
                 </form>

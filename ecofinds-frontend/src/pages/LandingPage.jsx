@@ -38,7 +38,6 @@ export default function LandingPage() {
         "Beauty",
     ];
 
-    // Fetch logged-in user info
     useEffect(() => {
         const fetchUser = async () => {
             try {
@@ -55,7 +54,6 @@ export default function LandingPage() {
         fetchUser();
     }, []);
 
-    // Fetch all products
     useEffect(() => {
         const fetchProducts = async () => {
             try {
@@ -78,7 +76,6 @@ export default function LandingPage() {
         fetchProducts();
     }, []);
 
-    // Filtered + sorted products
     const filteredProducts = useMemo(() => {
         let filtered = [...products];
 
@@ -102,7 +99,6 @@ export default function LandingPage() {
 
     return (
         <div className="min-h-screen bg-neutral-900 text-white flex flex-col">
-            {/* Side Menu Overlay */}
             {menuOpen && (
                 <div
                     className="fixed inset-0 bg-black/40 z-40"
@@ -110,7 +106,6 @@ export default function LandingPage() {
                 />
             )}
 
-            {/* Side Drawer */}
             <div
                 className={`fixed top-0 left-0 h-full w-64 bg-neutral-800 z-50 transform transition-transform duration-300 ${menuOpen ? "translate-x-0" : "-translate-x-full"
                     }`}
@@ -183,7 +178,6 @@ export default function LandingPage() {
                     </div>
                 </div>
 
-                {/* Search + filters */}
                 <div className="mt-3 flex flex-col md:flex-row gap-2 px-2 items-center">
                     <input
                         type="text"
@@ -194,7 +188,7 @@ export default function LandingPage() {
                border-2 border-green-500 focus:border-green-400 focus:ring-2 focus:ring-green-400 outline-none transition"
                     />
 
-                    {/* Desktop dropdowns + Add Product */}
+
                     <div className="hidden md:flex gap-2 items-center ml-2">
                         <select
                             value={selectedCategory}
@@ -229,7 +223,6 @@ export default function LandingPage() {
                         </button>
                     </div>
 
-                    {/* Mobile buttons */}
                     <div className="md:hidden flex gap-2 mt-2">
                         <button
                             onClick={() => setFilterModalOpen(true)}
@@ -246,7 +239,6 @@ export default function LandingPage() {
                     </div>
                 </div>
             </header>
-            {/* Banner */}
             <section className="relative w-full mt-4 sm:mt-6 px-4 sm:px-6 md:px-8">
                 <div className="w-full overflow-hidden rounded-lg border bg-white border-white/10">
                     <img
@@ -257,7 +249,6 @@ export default function LandingPage() {
                 </div>
             </section>
 
-            {/* Products Grid */}
             <main className="p-4 flex-1 overflow-auto">
                 <h2 className="text-lg font-semibold mb-3">Products</h2>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
@@ -265,7 +256,7 @@ export default function LandingPage() {
                         <ProductCard
                             key={p.id}
                             product={p}
-                            image={p.displayImage} // fixed image
+                            image={p.displayImage}
                             onClick={() => navigate(`/product/${p.id}`)}
                             onAddToCart={() => handleAddToCart(p)}
                         />
@@ -273,7 +264,6 @@ export default function LandingPage() {
                 </div>
             </main>
 
-            {/* Filter Modal */}
             {filterModalOpen && (
                 <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center">
                     <div className="bg-neutral-800 rounded-lg p-4 w-80">
@@ -303,7 +293,6 @@ export default function LandingPage() {
                 </div>
             )}
 
-            {/* Sort Modal */}
             {sortModalOpen && (
                 <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center">
                     <div className="bg-neutral-800 rounded-lg p-4 w-80">

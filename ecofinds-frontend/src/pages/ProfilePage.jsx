@@ -42,7 +42,6 @@ export default function ProfilePage() {
 
     return (
         <div className="min-h-screen bg-neutral-900 text-white flex flex-col items-center p-6">
-            {/* Side Menu Overlay */}
             {menuOpen && (
                 <div
                     className="fixed inset-0 bg-black/40 z-40"
@@ -50,7 +49,6 @@ export default function ProfilePage() {
                 />
             )}
 
-            {/* Side Drawer */}
             <div
                 className={`fixed top-0 left-0 h-full w-64 bg-neutral-800 z-50 transform transition-transform duration-300 ${menuOpen ? "translate-x-0" : "-translate-x-full"
                     }`}
@@ -74,7 +72,6 @@ export default function ProfilePage() {
                 </div>
             </div>
 
-            {/* Header */}
             <header className="relative w-full bg-neutral-800/90 px-4 py-3 shadow-md flex items-center justify-between">
                 <button onClick={() => setMenuOpen((s) => !s)} className="p-1">
                     <img src={sideMenuIcon} alt="menu" className="h-7 w-7 filter invert" />
@@ -99,7 +96,6 @@ export default function ProfilePage() {
                 </div>
             </header>
 
-            {/* User Info Section */}
             <div className="bg-neutral-800 rounded-2xl p-6 w-full max-w-md flex flex-col items-center gap-4 shadow-md hover:shadow-lg transition-shadow duration-300 mt-6">
                 <img
                     src={user.pfp_url ? `http://localhost:5174${user.pfp_url}` : "https://via.placeholder.com/150"}
@@ -117,7 +113,6 @@ export default function ProfilePage() {
                 </button>
             </div>
 
-            {/* Navigation Buttons */}
             <div className="mt-8 w-full max-w-md flex flex-col gap-3">
                 <button
                     className="w-full text-left bg-neutral-800 hover:bg-neutral-700 px-5 py-3 rounded-xl shadow-sm transition-all duration-200 font-medium"

@@ -82,12 +82,63 @@ router.get("/:id", async (req, res) => {
 // Add new product (single image)
 router.post("/addProduct", authMiddleware, upload.single("image"), async (req, res) => {
   try {
-    const { title, description, price_cents, category } = req.body;
+    const {
+      title,
+      description,
+      price_cents,
+      category,
+      quantity,
+      condition,
+      year_of_manufacture,
+      brand,
+      model,
+      length,
+      width,
+      height,
+      weight,
+      material,
+      color,
+      original_packaging,
+      manual_included,
+      working_condition,
+    } = req.body;
+
     const image_url = req.file ? `/uploads/${req.file.filename}` : null;
 
+    // Combine dimensions into a single string (optional)
+    const dimensions =
+      length && width && height ? `${length}x${width}x${height}` : null;
+
     const result = await query(
-      "INSERT INTO products (seller_id, title, description, price_cents, category, image_url) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
-      [req.user.id, title, description, price_cents, category, image_url]
+      `INSERT INTO products (
+        seller_id, title, description, price_cents, category, image_url,
+        quantity, condition, year_of_manufacture, brand, model, dimensions,
+        weight, material, color, original_packaging, manual_included, working_condition_description
+      ) VALUES (
+        $1,$2,$3,$4,$5,$6,
+        $7,$8,$9,$10,$11,$12,
+        $13,$14,$15,$16,$17,$18
+      ) RETURNING *`,
+      [
+        req.user.id,
+        title,
+        description,
+        price_cents,
+        category,
+        image_url,
+        quantity,
+        condition,
+        year_of_manufacture,
+        brand,
+        model,
+        dimensions,
+        weight,
+        material,
+        color,
+        original_packaging === "true", // ensure boolean
+        manual_included === "true",
+        working_condition,
+      ]
     );
 
     res.json(result.rows[0]);
@@ -96,5 +147,6 @@ router.post("/addProduct", authMiddleware, upload.single("image"), async (req, r
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 module.exports = router;
