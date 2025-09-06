@@ -84,16 +84,6 @@ Develop a **functional prototype** of EcoFinds with the following features:
 
 ---
 
-## 📸 Screenshots (To Add)  
-_Add wireframe screenshots or app UI once available._  
-
----
-
-## 🤝 Team Mission  
-Our hackathon team aims to **deliver a stable, scalable, and visually engaging prototype** that not only works but also inspires trust in sustainable consumption.  
-
----
-
 ## 🏁 Getting Started  
 
 ### 1️⃣ Clone the repo  
