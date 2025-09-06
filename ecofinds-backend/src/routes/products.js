@@ -79,35 +79,30 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// Add new product (single image)
 router.post("/addProduct", authMiddleware, upload.single("image"), async (req, res) => {
   try {
-    const {
-      title,
-      description,
-      price_cents,
-      category,
-      quantity,
-      condition,
-      year_of_manufacture,
-      brand,
-      model,
-      length,
-      width,
-      height,
-      weight,
-      material,
-      color,
-      original_packaging,
-      manual_included,
-      working_condition,
+    let {
+      title, description, price_cents, category, quantity,
+      condition, year_of_manufacture, brand, model,
+      length, width, height, weight, material, color,
+      original_packaging, manual_included, working_condition,
     } = req.body;
 
-    const image_url = req.file ? `/uploads/${req.file.filename}` : null;
+    // Convert numbers
+    price_cents = parseInt(price_cents);
+    quantity = parseInt(quantity);
+    length = length ? parseInt(length) : null;
+    width = width ? parseInt(width) : null;
+    height = height ? parseInt(height) : null;
+    weight = weight ? parseFloat(weight) : null;
+    year_of_manufacture = year_of_manufacture ? parseInt(year_of_manufacture) : null;
 
-    // Combine dimensions into a single string (optional)
-    const dimensions =
-      length && width && height ? `${length}x${width}x${height}` : null;
+    // Convert booleans
+    original_packaging = original_packaging === true || original_packaging === "true";
+    manual_included = manual_included === true || manual_included === "true";
+
+    const image_url = req.file ? `/uploads/${req.file.filename}` : null;
+    const dimensions = length && width && height ? `${length}x${width}x${height}` : null;
 
     const result = await query(
       `INSERT INTO products (
@@ -120,24 +115,9 @@ router.post("/addProduct", authMiddleware, upload.single("image"), async (req, r
         $13,$14,$15,$16,$17,$18
       ) RETURNING *`,
       [
-        req.user.id,
-        title,
-        description,
-        price_cents,
-        category,
-        image_url,
-        quantity,
-        condition,
-        year_of_manufacture,
-        brand,
-        model,
-        dimensions,
-        weight,
-        material,
-        color,
-        original_packaging === "true", // ensure boolean
-        manual_included === "true",
-        working_condition,
+        req.user.id, title, description, price_cents, category, image_url,
+        quantity, condition, year_of_manufacture, brand, model, dimensions,
+        weight, material, color, original_packaging, manual_included, working_condition
       ]
     );
 
@@ -147,6 +127,7 @@ router.post("/addProduct", authMiddleware, upload.single("image"), async (req, r
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 
 module.exports = router;
